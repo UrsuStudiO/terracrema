@@ -1,0 +1,131 @@
+@import 'tailwindcss';
+
+/* Tailwind v4: el modo oscuro se activa con la clase .dark en <html> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-porcelain: #F7F3EC;
+  --color-surface: #FFFFFF;
+  --color-ink: #201E1A;
+
+  --color-sage: #6B7A4F;
+  --color-sage-light: #9AAE7A;
+  --color-sage-dark: #4A5D3E;
+
+  --color-clay: #C17A56;
+  --color-clay-light: #E0AF8C;
+
+  --color-night: #12140F;
+  --color-night-surface: #1B1D16;
+  --color-night-text: #F3EFE6;
+
+  --font-display: 'Fraunces', serif;
+  --font-sans: 'Inter', sans-serif;
+
+  --tracking-widest2: 0.35em;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+/* Scroll-snap solo en desktop: en móvil el contenido es un flujo normal
+   y el snap se siente raro con la barra de direcciones dinámica. */
+@media (min-width: 768px) {
+  html {
+    /* "proximity" y no "mandatory": evita quedar atrapado en la última sección */
+    scroll-snap-type: y proximity;
+  }
+}
+
+.snap-section {
+  scroll-snap-align: start;
+}
+
+/* Parada obligatoria solo donde hace falta; la última sección no la lleva */
+.snap-stop {
+  scroll-snap-stop: always;
+}
+
+/* Título dividido en palabras: cada una vive en una máscara con overflow
+   oculto para que entre desde abajo en vez de solo desvanecerse */
+.split-title {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.split-title-mask {
+  overflow: hidden;
+  display: inline-block;
+  line-height: 1.05;
+  padding-bottom: 0.08em;
+}
+
+.split-title-word {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #F7F3EC;
+  color: #201E1A;
+  transition: background-color 0.5s ease, color 0.5s ease;
+  overflow-x: clip;
+}
+
+html.dark body {
+  background-color: #12140F;
+  color: #F3EFE6;
+}
+
+::selection {
+  background: #C17A56;
+  color: #FFFFFF;
+}
+
+/* thin scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(107, 122, 79, 0.4);
+  border-radius: 4px;
+}
+
+/* visible keyboard focus */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #C17A56;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Transición circular (View Transitions API) al cambiar de tema */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
